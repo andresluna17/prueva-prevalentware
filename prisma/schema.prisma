@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  Company   Company? @relation(fields: [companyId], references: [id])
+  companyId Int?
+}
+
+model Company {
+  id             Int          @id @default(autoincrement())
+  name           String
+  businessName   String
+  documentType   DocumentType
+  document       Int
+  countEmployees Int
+  logo           String
+  files          File[]
+  state          StateCompany
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum DocumentType {
+  NIT
+  AT
+  ID
+}
+
+enum StateCompany {
+  APPROVED
+  REJECTED
+}
